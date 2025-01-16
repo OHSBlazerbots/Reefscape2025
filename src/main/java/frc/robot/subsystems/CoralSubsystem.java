@@ -1,45 +1,23 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants.ElevatorConstants;
+//These were imported for the elevator
+//import frc.robot.Constants.ElevatorConstants;
+// frc.robot.subsystems.motor_controllers.PositionPidMotorController;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+//import frc.robot.subsystems.motorController;
 
-import frc.robot.subsystems.motorController;
-import frc
+public class CoralSubsystem extends SubsystemBase {
 
-public class CoralSubsystem extends SubsystemBase 
-{
-
-
-
-
-
-
-//This is the hand
-    public handy()
-    {
+    // This is the hand
+    public void handy() {
 
     }
 
-
-
-
-
-
-//This is the arm joint.
-    public armJoints()
-    {
-
+    // This is the arm joint.
+    public void armJoints() {
 
     }
-
-
-//This is the elevator
-    public lift()
-    {
-
-    }
-
 
 }
-    
-
