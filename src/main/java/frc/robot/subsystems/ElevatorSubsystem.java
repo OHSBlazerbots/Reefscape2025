@@ -20,23 +20,24 @@ public class ElevatorSubsystem extends SubsystemBase {
             MotorType.kBrushless);
     private SparkMax m_SecondaryMotor = new SparkMax(ElevatorConstants.kSecondaryElevatorMotorPort,
             MotorType.kBrushless);
-    private SparkMaxConfig config = new SparkMaxConfig();
-    private SparkMaxConfig config2 = new SparkMaxConfig();
+    private SparkMaxConfig primaryConfig = new SparkMaxConfig();
+    private SparkMaxConfig secondaryConfig = new SparkMaxConfig();
     private SparkClosedLoopController m_ElevatorPrimaryController = m_PrimaryMotor.getClosedLoopController();
     private SparkClosedLoopController m_ElevatorSecondaryController = m_SecondaryMotor.getClosedLoopController();
 
     public ElevatorSubsystem() {
 
-        config
+        primaryConfig
                 .inverted(true)
                 .idleMode(IdleMode.kBrake);
 
-        config2
-                .inverted(false)
-                .idleMode(IdleMode.kBrake);
+        // secondaryConfig
+        // .inverted(false)
+        // .idleMode(IdleMode.kBrake);
+        secondaryConfig.follow(m_PrimaryMotor.getDeviceId(), true);
 
-        m_PrimaryMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        m_SecondaryMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_PrimaryMotor.configure(primaryConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_SecondaryMotor.configure(secondaryConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 

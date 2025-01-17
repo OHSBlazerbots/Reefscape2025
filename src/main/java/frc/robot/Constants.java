@@ -22,8 +22,8 @@ public final class Constants {
   }
 
   public static class ElevatorConstants {
-    public static final int kPrimaryElevatorMotorPort = 0;
-    public static final int kSecondaryElevatorMotorPort = 0;
+    public static final int kPrimaryElevatorMotorPort = 7;
+    public static final int kSecondaryElevatorMotorPort = 8;
 
   }
 
