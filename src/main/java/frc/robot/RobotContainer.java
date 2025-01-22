@@ -49,7 +49,7 @@ public class RobotContainer {
    * CommandXboxController
    * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * {@link edu.wpi.first.wpilibj2.command.button. CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
@@ -62,8 +62,13 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController
         .b()
-        .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorSpeed(0.2)))
-        .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorSpeed(0)));
+        .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(500)))
+        .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+
+    m_driverController
+        .x()
+        .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(-500)))
+        .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
   }
 
   /**
