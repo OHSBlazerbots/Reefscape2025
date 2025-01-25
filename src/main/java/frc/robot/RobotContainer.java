@@ -7,7 +7,9 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ArmJointsSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.GrabberSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -25,7 +27,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-
+  private final ArmJointsSubsystem m_ArmJointsSubsystem = new ArmJointsSubsystem();
+  private final GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
@@ -58,7 +61,7 @@ public class RobotContainer {
     // .onTrue(new ExampleCommand(m_elevatorSubsystem));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
+    // pressed
     // cancelling on release.
     m_driverController
         .b()
@@ -69,6 +72,26 @@ public class RobotContainer {
         .x()
         .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(-500)))
         .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+
+    m_driverController
+        .y()
+        .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(500)))
+        .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+
+    m_driverController
+        .a()
+        .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(-500)))
+        .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+
+    m_driverController
+        .leftBumper()
+        .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(500)))
+        .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
+
+    m_driverController
+        .rightBumper()
+        .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(-500)))
+        .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
   }
 
   /**

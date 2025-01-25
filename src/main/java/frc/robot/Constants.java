@@ -22,14 +22,21 @@ public final class Constants {
   }
 
   public static class ElevatorConstants {
-    public static final int kPrimaryElevatorMotorPort = 10;
-    public static final int kSecondaryElevatorMotorPort = 12;
+    public static final int kPrimaryElevatorMotorPort = 31;
+    public static final int kSecondaryElevatorMotorPort = 32;
     public static final int kForwardSoftLimitRotations = 50;
     public static final int kReverseSoftLimitRotations = -50;
 
   }
 
   public static class ArmJointsConstants {
-    public static final int kArmMotorPort = 0;
+    public static final int kArmMotorPort = 34;
+    public static final int kArmForwardSoftLimitRotations = 15;
+    public static final int kArmReverseSoftLimitRotations = -15;
+  }
+
+  public static class GrabberConstants {
+    public static final int kGrabberMotorPort = 33;
+
   }
 }
