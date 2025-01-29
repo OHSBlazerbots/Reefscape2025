@@ -39,4 +39,11 @@ public final class Constants {
     public static final int kGrabberMotorPort = 33;
 
   }
+
+  public static class AlgaeConstants {
+    public static final int kAlgaePrimaryMotorPort = 0;
+    public static final int kAlgaeSecondaryMotorPort = 0;
+    public static final int kAlgaeForwardSoftLimitRotations = 0;
+    public static final int kAlgaeReverseSoftLimitRotations = 0;
+  }
 }
