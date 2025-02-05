@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LightingSubsystem extends SubsystemBase {
@@ -33,6 +35,12 @@ public class LightingSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setPink();
+        // setPink();
+    }
+
+    public void pinkWhiteStrobe() {
+        LEDPattern gradient = LEDPattern.gradient(LEDPattern.GradientType.kContinuous, Color.kPink, Color.kWhite);
+        gradient.applyTo(m_ledBuffer);
+        m_led.setData(m_ledBuffer);
     }
 }
