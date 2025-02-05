@@ -111,6 +111,7 @@ public class Vision {
   public static Pose2d getAprilTagPose(int aprilTag, Transform2d robotOffset) {
     Optional<Pose3d> aprilTagPose3d = fieldLayout.getTagPose(aprilTag);
     if (aprilTagPose3d.isPresent()) {
+      System.out.println("April tag here");
       return aprilTagPose3d.get().toPose2d().transformBy(robotOffset);
     } else {
       throw new RuntimeException("Cannot get AprilTag " + aprilTag + " from field " + fieldLayout.toString());
@@ -224,6 +225,7 @@ public class Vision {
    */
   public double getDistanceFromAprilTag(int id) {
     Optional<Pose3d> tag = fieldLayout.getTagPose(id);
+    System.out.println("April tag here but getdistancefromapriltag");
     return tag.map(pose3d -> PhotonUtils.getDistanceToPose(currentPose.get(), pose3d.toPose2d())).orElse(-1.0);
   }
 
@@ -488,6 +490,7 @@ public class Vision {
      */
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
       updateUnreadResults();
+      System.out.println("April tag here globalpose");
       return estimatedRobotPose;
     }
 
