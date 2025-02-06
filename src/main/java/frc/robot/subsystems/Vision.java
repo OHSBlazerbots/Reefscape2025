@@ -137,6 +137,7 @@ public class Vision {
        * Therefore, we must ensure that the actual robot pose is provided in the
        * simulator when updating the vision simulation during the simulation.
        */
+      System.out.println("April tag here updatePoseEstimation");
       visionSim.update(swerveDrive.getSimulationDriveTrainPose().get());
     }
     for (Cameras camera : Cameras.values()) {

@@ -132,12 +132,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println(visionDriveTest + "April tag here periodic");
+        // System.out.println(visionDriveTest + "April tag here periodic");
         // When vision is enabled we must manually update odometry in SwerveDrive
         if (visionDriveTest) {
             swerveDrive.updateOdometry();
             vision.updatePoseEstimation(swerveDrive);
-            System.out.println("April tag here Odometry");
+            // System.out.println("April tag here Odometry");
         }
     }
 
