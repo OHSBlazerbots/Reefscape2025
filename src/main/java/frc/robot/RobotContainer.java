@@ -6,9 +6,15 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ArmJointsSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.GrabberSubsystem;
+
 import frc.robot.subsystems.DriveSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -33,6 +39,13 @@ import swervelib.SwerveInputStream;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+  private final ArmJointsSubsystem m_ArmJointsSubsystem = new ArmJointsSubsystem();
+  private final GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandXboxController m_driverController = new CommandXboxController(
+      OperatorConstants.kDriverControllerPort);
+
   private final DriveSubsystem drivebase = new DriveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/neo"));
 
@@ -99,6 +112,46 @@ public class RobotContainer {
    * CommandXboxController
    * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button. CommandJoystick Flight
+   * joysticks}.
+   */
+  private void configureBindings() {
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    // new Trigger(m_elevatorSubsystem::exampleCondition)
+    // .onTrue(new ExampleCommand(m_elevatorSubsystem));
+
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
+    // pressed
+    // cancelling on release.
+    m_driverController
+        .b()
+        .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(500)))
+        .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+
+    m_driverController
+        .x()
+        .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(-500)))
+        .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+
+    m_driverController
+        .y()
+        .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(500)))
+        .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+
+    m_driverController
+        .a()
+        .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(-500)))
+        .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+
+    m_driverController
+        .leftBumper()
+        .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(500)))
+        .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
+
+    m_driverController
+        .rightBumper()
+        .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(-500)))
+        .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
    * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
@@ -155,6 +208,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Auto");
+    return null;
+    // Autos.exampleAuto(m_elevatorSubsystem);
+    //return drivebase.getAutonomousCommand("New Auto");
   }
 }
