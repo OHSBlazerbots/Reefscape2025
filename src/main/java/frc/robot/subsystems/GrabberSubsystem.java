@@ -1,23 +1,22 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants.GrabberConstants;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.*;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLimitSwitch;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.GrabberConstants;
 
 public class GrabberSubsystem extends SubsystemBase {
 
@@ -25,8 +24,6 @@ public class GrabberSubsystem extends SubsystemBase {
             MotorType.kBrushless);
     private SparkMaxConfig primaryConfig = new SparkMaxConfig();
     private SparkClosedLoopController m_GrabberController = m_GrabberMotor.getClosedLoopController();
-    // private SparkClosedLoopController m_ElevatorSecondaryController =
-    // m_SecondaryMotor.getClosedLoopController();
 
     private SparkLimitSwitch forwardLimitSwitch;
     private RelativeEncoder encoder;
@@ -35,10 +32,6 @@ public class GrabberSubsystem extends SubsystemBase {
 
         primaryConfig
                 .idleMode(IdleMode.kBrake);
-
-        // secondaryConfig
-        // .inverted(false)
-        // .idleMode(IdleMode.kBrake);
 
         forwardLimitSwitch = m_GrabberMotor.getForwardLimitSwitch();
         encoder = m_GrabberMotor.getEncoder();
@@ -87,15 +80,11 @@ public class GrabberSubsystem extends SubsystemBase {
     }
 
     public void setGrabberVelocity(double targetVelocity) {
-        // double targetVelocity = SmartDashboard.getNumber("Elevator/Target Velocity",
-        // 0);
         m_GrabberController.setReference(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
         System.out.println("trying to set motor to speed " + targetVelocity);
     }
 
     public void setGrabberPosition(double targetPosition) {
-        // double targetPosition = SmartDashboard.getNumber("Elevator/Target Position",
-        // 0);
         m_GrabberController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
     }
 

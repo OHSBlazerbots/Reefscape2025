@@ -79,5 +79,3 @@ public final class Constants {
     public static final int kPullUpReverseSoftLimitRotations = -50;
   }
 }
-
-
