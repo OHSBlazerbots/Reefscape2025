@@ -78,4 +78,8 @@ public final class Constants {
     public static final int kPullUpForwardSoftLimitRotations = 50;
     public static final int kPullUpReverseSoftLimitRotations = -50;
   }
+
+  public Command getAutonomousCommand() {
+
+  }
 }

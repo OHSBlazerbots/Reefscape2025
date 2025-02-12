@@ -105,6 +105,10 @@ public class ElevatorSubsystem extends SubsystemBase {
                 m_ElevatorPrimaryController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         }
 
+        // public boolean isIntakeDown() {
+        // return (m_swivelEncoder.getPosition() >= 29);
+        // }
+
         @Override
         public void periodic() {
                 // Display data from SPARK onto the dashboard
