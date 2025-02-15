@@ -21,7 +21,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 import swervelib.SwerveInputStream;
-
+import frc.robot.commands.Autos;
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -163,6 +163,10 @@ public class RobotContainer {
         m_CodrivController
                 .y()
                 .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(500)))
+                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+        m_CodrivController
+                .povDown()
+                .onTrue(Autos.AutoRoutines.MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, 10, 1  ))
                 .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
 
         m_CodrivController

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.ArmJointsSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.GrabberSubsystem;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
@@ -23,7 +24,6 @@ public final class Autos {
   public class AutoRoutines {
     private ElevatorSubsystem m_elevatorsSubsystem;
     private ArmJointsSubsystem m_ArmJointsSubsystem;
-
     public static Command MoveCoralToLs(ElevatorSubsystem m_elevatorSubsystem,
         ArmJointsSubsystem m_ArmJointsSubsystem, int ElevatorPosition, int Armposition) {
       return Commands.sequence(
