@@ -490,7 +490,6 @@ public class Vision {
      */
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
       updateUnreadResults();
-      System.out.println("April tag here globalpose");
       return estimatedRobotPose;
     }
 
@@ -566,8 +565,10 @@ public class Vision {
         for (var tgt : targets) {
           var tagPose = poseEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
           if (tagPose.isEmpty()) {
+
             continue;
           }
+          System.out.print("Target not found");
           numTags++;
           avgDist += tagPose
               .get()

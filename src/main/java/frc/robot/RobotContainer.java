@@ -136,7 +136,6 @@ public class RobotContainer {
       m_DrivController.rightBumper().onTrue(Commands.none());
     } else {
       m_DrivController.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      m_DrivController.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       m_DrivController.b().whileTrue(
           drivebase.driveToPose(
               new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0))));
