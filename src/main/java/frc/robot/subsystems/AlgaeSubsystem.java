@@ -20,17 +20,21 @@ import frc.robot.Constants.AlgaeConstants;
 
 public class AlgaeSubsystem extends SubsystemBase {
 
-        private SparkMax m_PrimaryMotor = new SparkMax(AlgaeConstants.kAlgaePrimaryMotorPort,
-                        MotorType.kBrushless);
-        private SparkMax m_SecondaryMotor = new SparkMax(AlgaeConstants.kAlgaeSecondaryMotorPort,
-                        MotorType.kBrushless);
-        private SparkMaxConfig primaryConfig = new SparkMaxConfig();
-        private SparkMaxConfig secondaryConfig = new SparkMaxConfig();
-        private SparkClosedLoopController m_PrimaryController = m_PrimaryMotor.getClosedLoopController();
+        private SparkMax m_IntakeController = new SparkMax(AlgaeConstants.kAlgaePrimaryMotorPort,
+                        MotorType.kBrushless); // motor for wheels on grabber
+        private SparkMax m_SwivelController = new SparkMax(AlgaeConstants.kAlgaeSecondaryMotorPort,
+                        MotorType.kBrushless); // motor for swivel
+        private SparkMaxConfig primaryConfig = new SparkMaxConfig(); // for wheels on grabber
+        private SparkMaxConfig secondaryConfig = new SparkMaxConfig(); // for swivel
+        private SparkClosedLoopController m_PrimaryController = m_IntakeController.getClosedLoopController();
+        private SparkClosedLoopController m_SecondaryController = m_SwivelController.getClosedLoopController();
 
-        private SparkLimitSwitch forwardLimitSwitch;
-        private SparkLimitSwitch reverseLimitSwitch;
-        private RelativeEncoder encoder;
+        private SparkLimitSwitch intakeForwardLimitSwitch;
+        private SparkLimitSwitch intakeReverseLimitSwitch;
+        private SparkLimitSwitch swivelForwardLimitSwitch;
+        private SparkLimitSwitch swivelReverseLimitSwitch;
+        private RelativeEncoder intakeEncoder;
+        private RelativeEncoder swivelEncoder;
 
         public AlgaeSubsystem() {
 
@@ -38,11 +42,9 @@ public class AlgaeSubsystem extends SubsystemBase {
                                 .inverted(true)
                                 .idleMode(IdleMode.kBrake);
 
-                secondaryConfig.follow(m_PrimaryMotor.getDeviceId(), true);
-
-                forwardLimitSwitch = m_PrimaryMotor.getForwardLimitSwitch();
-                reverseLimitSwitch = m_PrimaryMotor.getReverseLimitSwitch();
-                encoder = m_PrimaryMotor.getEncoder();
+                intakeForwardLimitSwitch = m_IntakeController.getForwardLimitSwitch();
+                intakeReverseLimitSwitch = m_IntakeController.getReverseLimitSwitch();
+                intakeEncoder = m_IntakeController.getEncoder();
 
                 primaryConfig.limitSwitch
                                 .forwardLimitSwitchType(Type.kNormallyOpen)
@@ -85,11 +87,49 @@ public class AlgaeSubsystem extends SubsystemBase {
                                 .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
                                 .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
-                m_PrimaryMotor.configure(primaryConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-                m_SecondaryMotor.configure(secondaryConfig, ResetMode.kResetSafeParameters,
+                m_IntakeController.configure(primaryConfig, ResetMode.kResetSafeParameters,
+                                PersistMode.kPersistParameters);
+                m_SwivelController.configure(secondaryConfig, ResetMode.kResetSafeParameters,
                                 PersistMode.kPersistParameters);
 
-                encoder.setPosition(0);
+                secondaryConfig
+                                .idleMode(IdleMode.kBrake);
+
+                swivelForwardLimitSwitch = m_SwivelController.getForwardLimitSwitch();
+                swivelReverseLimitSwitch = m_SwivelController.getReverseLimitSwitch();
+                swivelEncoder = m_SwivelController.getEncoder();
+
+                secondaryConfig.limitSwitch
+                                .forwardLimitSwitchType(Type.kNormallyOpen)
+                                .forwardLimitSwitchEnabled(true)
+                                .reverseLimitSwitchType(Type.kNormallyOpen)
+                                .reverseLimitSwitchEnabled(true);
+
+                secondaryConfig.softLimit
+                                .forwardSoftLimit(AlgaeConstants.kAlgaeUpSoftLimit)
+                                .forwardSoftLimitEnabled(true)
+                                .reverseSoftLimit(AlgaeConstants.kAlgaeDownSoftLimit)
+                                .reverseSoftLimitEnabled(true);
+                secondaryConfig.encoder
+                                .positionConversionFactor(1)
+                                .velocityConversionFactor(1);
+                secondaryConfig.closedLoop
+                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                                // Set PID values for position control. We don't need to pass a closed loop
+                                // slot, as it will default to slot 0.
+                                .p(0.1)
+                                .i(0)
+                                .d(0)
+                                .outputRange(-1, 1)
+                                // Set PID values for velocity control in slot 1
+                                .p(0.0001, ClosedLoopSlot.kSlot1)
+                                .i(0, ClosedLoopSlot.kSlot1)
+                                .d(0, ClosedLoopSlot.kSlot1)
+                                .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
+                                .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
+
+                intakeEncoder.setPosition(0);
+                swivelEncoder.setPosition(0);
                 SmartDashboard.setDefaultBoolean("Algae/direction", true);
                 SmartDashboard.setDefaultNumber("Algae/Target Position", 0);
                 SmartDashboard.setDefaultNumber("Algae/Target Velocity", 0);
@@ -99,30 +139,44 @@ public class AlgaeSubsystem extends SubsystemBase {
 
         public void setAlgaeVelocity(double targetVelocity) {
                 m_PrimaryController.setReference(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+                m_SecondaryController.setReference(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
         }
 
         public void setAlgaePosition(double targetPosition) {
-                m_PrimaryController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+                m_PrimaryController.setReference(targetPosition, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+                m_SecondaryController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         }
 
         @Override
         public void periodic() {
                 // Display data from SPARK onto the dashboard
-                SmartDashboard.putBoolean("Algae/Forward Limit Reached", forwardLimitSwitch.isPressed());
-                SmartDashboard.putBoolean("Algae/Reverse Limit Reached", reverseLimitSwitch.isPressed());
-                SmartDashboard.putNumber("Algae/Applied Output", m_PrimaryMotor.getAppliedOutput());
-                SmartDashboard.putNumber("Algae/Position", encoder.getPosition());
+                SmartDashboard.putBoolean("Algae/Intake Forward Limit Reached", intakeForwardLimitSwitch.isPressed());
+                SmartDashboard.putBoolean("Algae/Intake Reverse Limit Reached", intakeReverseLimitSwitch.isPressed());
+                SmartDashboard.putBoolean("Algae/Swivel Forward Limit Reached", swivelForwardLimitSwitch.isPressed());
+                SmartDashboard.putBoolean("Algae/Swivel Reverse Limit Reached", swivelReverseLimitSwitch.isPressed());
+                SmartDashboard.putNumber("Algae/Intake Applied Output", m_IntakeController.getAppliedOutput());
+                SmartDashboard.putNumber("Algae/Intake Position", intakeEncoder.getPosition());
+                SmartDashboard.putNumber("Algae/Swivel Applied Output", m_SwivelController.getAppliedOutput());
+                SmartDashboard.putNumber("Algae/Swivel Position", swivelEncoder.getPosition());
 
-                SmartDashboard.putNumber("Algae/PrimaryMotor set output", m_PrimaryMotor.get());
-                SmartDashboard.putNumber("Algae/SecondaryMotor set output", m_SecondaryMotor.get());
+                SmartDashboard.putNumber("Algae/Intake Motor set output", m_IntakeController.get());
+                SmartDashboard.putNumber("Algae/Swivel Motor set output", m_SwivelController.get());
 
-                SmartDashboard.putNumber("Algae/Actual Position", encoder.getPosition());
-                SmartDashboard.putNumber("Algae/Actual Velocity", encoder.getVelocity());
+                SmartDashboard.putNumber("Algae/Intake Position", intakeEncoder.getPosition());
+                SmartDashboard.putNumber("Algae/Intake Velocity", intakeEncoder.getVelocity());
+                SmartDashboard.putNumber("Algae/Swivel Position", swivelEncoder.getPosition());
+                SmartDashboard.putNumber("Algae/Swivel Velocity", swivelEncoder.getVelocity());
 
-                if (SmartDashboard.getBoolean("Algae/Reset Encoder", false)) {
-                        SmartDashboard.putBoolean("Algae/Reset Encoder", false);
+                if (SmartDashboard.getBoolean("Algae/Intake Reset Encoder", false)) {
+                        SmartDashboard.putBoolean("Algae/Intake Reset Encoder", false);
                         // Reset the encoder position to 0
-                        encoder.setPosition(0);
+                        intakeEncoder.setPosition(0);
+                }
+
+                if (SmartDashboard.getBoolean("Algae/Swivel Reset Encoder", false)) {
+                        SmartDashboard.putBoolean("Algae/Swivel Reset Encoder", false);
+                        // Reset the encoder position to 0
+                        swivelEncoder.setPosition(0);
                 }
         }
 

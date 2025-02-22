@@ -70,6 +70,8 @@ public final class Constants {
     public static final int kAlgaeSecondaryMotorPort = 0;
     public static final int kAlgaeForwardSoftLimitRotations = 0;
     public static final int kAlgaeReverseSoftLimitRotations = 0;
+    public static final int kAlgaeUpSoftLimit = 10;
+    public static final int kAlgaeDownSoftLimit = 0;
   }
 
   public static class PullUpConstants {
