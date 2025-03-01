@@ -144,7 +144,9 @@ public class Vision {
     }
     for (Cameras camera : Cameras.values()) {
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
+      System.out.println("get estiamated position before 147");
       if (poseEst != null && poseEst.isPresent()) {
+        System.out.println("get estiamated position after 147");
         var pose = poseEst.get();
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
             pose.timestampSeconds,
@@ -155,6 +157,7 @@ public class Vision {
   }
 
   /**
+   *
    * Generates the estimated robot pose. Returns empty if:
    * <ul>
    * <li>No Pose Estimates could be generated</li>
@@ -350,7 +353,7 @@ public class Vision {
     /**
      * Estimated robot pose.
      */
-    public Optional<EstimatedRobotPose> estimatedRobotPose;
+    public Optional<EstimatedRobotPose> estimatedRobotPose = Optional.empty();
     /**
      * Simulated camera instance which only exists during simulations.
      */
@@ -480,6 +483,7 @@ public class Vision {
      * Sorts the list by timestamp.
      */
     private void updateUnreadResults() {
+      System.out.println("updateUnreadResults");
       double mostRecentTimestamp = resultsList.isEmpty() ? 0.0 : resultsList.get(0).getTimestampSeconds();
       double currentTimestamp = Microseconds.of(NetworkTablesJNI.now()).in(Seconds);
       double debounceTime = Milliseconds.of(15).in(Seconds);
@@ -488,12 +492,14 @@ public class Vision {
       }
       if ((resultsList.isEmpty() || (currentTimestamp - mostRecentTimestamp >= debounceTime)) &&
           (currentTimestamp - lastReadTimestamp) >= debounceTime) {
+        System.out.println("result list is empty");
         resultsList = Robot.isReal() ? camera.getAllUnreadResults() : cameraSim.getCamera().getAllUnreadResults();
         lastReadTimestamp = currentTimestamp;
         resultsList.sort((PhotonPipelineResult a, PhotonPipelineResult b) -> {
           return a.getTimestampSeconds() >= b.getTimestampSeconds() ? 1 : -1;
         });
         if (!resultsList.isEmpty()) {
+          System.out.println("reult list is not empty");
           updateEstimatedGlobalPose();
         }
       }
