@@ -62,7 +62,6 @@ public class DriveSubsystem extends SubsystemBase {
     public double maximumSpeed = Units.feetToMeters(14.5);
     private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout
             .loadField(AprilTagFields.k2025Reefscape);
-    private final boolean visionDriveTest = true;
     private Vision vision;
 
     /**
@@ -100,12 +99,11 @@ public class DriveSubsystem extends SubsystemBase {
         // swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used
         // over the internal encoder and push the offsets onto it. Throws warning if not
         // possible
-        if (visionDriveTest) {
-            setupPhotonVision();
-            // Stop the odometry thread if we are using vision that way we can synchronize
-            // updates better.
-            swerveDrive.stopOdometryThread();
-        }
+        setupPhotonVision();
+        // Stop the odometry thread if we are using vision that way we can synchronize
+        // updates better.
+        swerveDrive.stopOdometryThread();
+
         setupPathPlanner();
     }
 
@@ -132,13 +130,9 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // System.out.println(visionDriveTest + "April tag here periodic");
         // When vision is enabled we must manually update odometry in SwerveDrive
-        if (visionDriveTest) {
-            swerveDrive.updateOdometry();
-            vision.updatePoseEstimation(swerveDrive);
-            // System.out.println("April tag here Odometry");
-        }
+        swerveDrive.updateOdometry();
+        vision.updatePoseEstimation(swerveDrive);
     }
 
     @Override
