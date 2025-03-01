@@ -45,4 +45,37 @@ public final class Constants {
     public final static int SLOT_1 = 1;
     public final static int kSlot_Turning = SLOT_1;
   }
+
+  public static class ElevatorConstants {
+    public static final int kPrimaryElevatorMotorPort = 9;
+    public static final int kSecondaryElevatorMotorPort = 10;
+    public static final int kForwardSoftLimitRotations = 47;
+    public static final int kReverseSoftLimitRotations = 0;
+
+  }
+
+  public static class ArmJointsConstants {
+    public static final int kArmMotorPort = 11;
+    public static final int kArmForwardSoftLimitRotations = 75;
+    public static final int kArmReverseSoftLimitRotations = 0;
+  }
+
+  public static class GrabberConstants {
+    public static final int kGrabberMotorPort = 12;
+
+  }
+
+  public static class AlgaeConstants {
+    public static final int kAlgaePrimaryMotorPort = 69;
+    public static final int kAlgaeSecondaryMotorPort = 70;
+    public static final int kAlgaeForwardSoftLimitRotations = 0;
+    public static final int kAlgaeReverseSoftLimitRotations = 0;
+  }
+
+  public static class PullUpConstants {
+    public static final int kPullUpPrimaryMotorPort = 80;
+    public static final int kPullUpSecondaryMotorPort = 90;
+    public static final int kPullUpForwardSoftLimitRotations = 50;
+    public static final int kPullUpReverseSoftLimitRotations = -50;
+  }
 }

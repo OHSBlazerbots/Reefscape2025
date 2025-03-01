@@ -16,23 +16,24 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.AlgaeConstants;
+import frc.robot.Constants.PullUpConstants;
 
-public class AlgaeSubsystem extends SubsystemBase {
+//This is climbing
+public class PullUpSubsystem extends SubsystemBase {
 
-        private SparkMax m_PrimaryMotor = new SparkMax(AlgaeConstants.kAlgaePrimaryMotorPort,
+        private SparkMax m_PrimaryMotor = new SparkMax(PullUpConstants.kPullUpPrimaryMotorPort,
                         MotorType.kBrushless);
-        private SparkMax m_SecondaryMotor = new SparkMax(AlgaeConstants.kAlgaeSecondaryMotorPort,
+        private SparkMax m_SecondaryMotor = new SparkMax(PullUpConstants.kPullUpSecondaryMotorPort,
                         MotorType.kBrushless);
         private SparkMaxConfig primaryConfig = new SparkMaxConfig();
         private SparkMaxConfig secondaryConfig = new SparkMaxConfig();
-        private SparkClosedLoopController m_PrimaryController = m_PrimaryMotor.getClosedLoopController();
+        private SparkClosedLoopController m_PullUpPrimaryController = m_PrimaryMotor.getClosedLoopController();
 
         private SparkLimitSwitch forwardLimitSwitch;
         private SparkLimitSwitch reverseLimitSwitch;
         private RelativeEncoder encoder;
 
-        public AlgaeSubsystem() {
+        public PullUpSubsystem() {
 
                 primaryConfig
                                 .inverted(true)
@@ -51,9 +52,9 @@ public class AlgaeSubsystem extends SubsystemBase {
                                 .reverseLimitSwitchEnabled(true);
 
                 primaryConfig.softLimit
-                                .forwardSoftLimit(AlgaeConstants.kAlgaeForwardSoftLimitRotations)
+                                .forwardSoftLimit(PullUpConstants.kPullUpForwardSoftLimitRotations)
                                 .forwardSoftLimitEnabled(true)
-                                .reverseSoftLimit(AlgaeConstants.kAlgaeReverseSoftLimitRotations)
+                                .reverseSoftLimit(PullUpConstants.kPullUpReverseSoftLimitRotations)
                                 .reverseSoftLimitEnabled(true);
 
                 /*
@@ -90,37 +91,37 @@ public class AlgaeSubsystem extends SubsystemBase {
                                 PersistMode.kPersistParameters);
 
                 encoder.setPosition(0);
-                SmartDashboard.setDefaultBoolean("Algae/direction", true);
-                SmartDashboard.setDefaultNumber("Algae/Target Position", 0);
-                SmartDashboard.setDefaultNumber("Algae/Target Velocity", 0);
-                SmartDashboard.setDefaultBoolean("Algae/Control Mode", false);
-                SmartDashboard.setDefaultBoolean("Algae/Reset Encoder", false);
+                SmartDashboard.setDefaultBoolean("Pullp/direction", true);
+                SmartDashboard.setDefaultNumber("PullUp/Target Position", 0);
+                SmartDashboard.setDefaultNumber("PullUp/Target Velocity", 0);
+                SmartDashboard.setDefaultBoolean("PullUp/Control Mode", false);
+                SmartDashboard.setDefaultBoolean("PullUp/Reset Encoder", false);
         }
 
-        public void setAlgaeVelocity(double targetVelocity) {
-                m_PrimaryController.setReference(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        public void setPullUpVelocity(double targetVelocity) {
+                m_PullUpPrimaryController.setReference(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
         }
 
-        public void setAlgaePosition(double targetPosition) {
-                m_PrimaryController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        public void setPullUpPosition(double targetPosition) {
+                m_PullUpPrimaryController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         }
 
         @Override
         public void periodic() {
                 // Display data from SPARK onto the dashboard
-                SmartDashboard.putBoolean("Algae/Forward Limit Reached", forwardLimitSwitch.isPressed());
-                SmartDashboard.putBoolean("Algae/Reverse Limit Reached", reverseLimitSwitch.isPressed());
-                SmartDashboard.putNumber("Algae/Applied Output", m_PrimaryMotor.getAppliedOutput());
-                SmartDashboard.putNumber("Algae/Position", encoder.getPosition());
+                SmartDashboard.putBoolean("PullUp/Forward Limit Reached", forwardLimitSwitch.isPressed());
+                SmartDashboard.putBoolean("PullUp/Reverse Limit Reached", reverseLimitSwitch.isPressed());
+                SmartDashboard.putNumber("PullUp/Applied Output", m_PrimaryMotor.getAppliedOutput());
+                SmartDashboard.putNumber("PullUp/Position", encoder.getPosition());
 
-                SmartDashboard.putNumber("Algae/PrimaryMotor set output", m_PrimaryMotor.get());
-                SmartDashboard.putNumber("Algae/SecondaryMotor set output", m_SecondaryMotor.get());
+                SmartDashboard.putNumber("PullUp/PrimaryMotor set output", m_PrimaryMotor.get());
+                SmartDashboard.putNumber("PullUp/SecondaryMotor set output", m_SecondaryMotor.get());
 
-                SmartDashboard.putNumber("Algae/Actual Position", encoder.getPosition());
-                SmartDashboard.putNumber("Algae/Actual Velocity", encoder.getVelocity());
+                SmartDashboard.putNumber("PullUp/Actual Position", encoder.getPosition());
+                SmartDashboard.putNumber("PullUp/Actual Velocity", encoder.getVelocity());
 
-                if (SmartDashboard.getBoolean("Algae/Reset Encoder", false)) {
-                        SmartDashboard.putBoolean("Algae/Reset Encoder", false);
+                if (SmartDashboard.getBoolean("PullUp/Reset Encoder", false)) {
+                        SmartDashboard.putBoolean("PullUp/Reset Encoder", false);
                         // Reset the encoder position to 0
                         encoder.setPosition(0);
                 }
