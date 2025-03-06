@@ -188,19 +188,19 @@ public class RobotContainer {
                                 .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
                 m_CodrivController
                                 .start()
-                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakePosition(200)))
-                                .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakePosition(0)));
+                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakeVelocity(5000)))
+                                .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakeVelocity(0)));
                 m_CodrivController
                                 .back()
-                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakeVelocity(9000)))
+                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakeVelocity(-5000)))
                                 .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakeVelocity(0)));
                 m_CodrivController
                                 .povDown()
-                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelPosition(200)))
+                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelVelocity(-2000)))
                                 .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelPosition(0)));
                 m_CodrivController
                                 .povUp()
-                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelVelocity(250)))
+                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelVelocity(2000)))
                                 .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelVelocity(0)));
 
         }
