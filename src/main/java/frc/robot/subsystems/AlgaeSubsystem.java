@@ -20,13 +20,14 @@ import frc.robot.Constants.AlgaeConstants;
 
 public class AlgaeSubsystem extends SubsystemBase {
 
-        private SparkMax m_PrimaryMotor = new SparkMax(AlgaeConstants.kAlgaePrimaryMotorPort,
+        private SparkMax m_PrimaryMotor = new SparkMax(AlgaeConstants.kAlgaePrimaryMotorPort, // swivle for algae
                         MotorType.kBrushless);
-        private SparkMax m_SecondaryMotor = new SparkMax(AlgaeConstants.kAlgaeSecondaryMotorPort,
+        private SparkMax m_SecondaryMotor = new SparkMax(AlgaeConstants.kAlgaeSecondaryMotorPort, // wheels for algae
                         MotorType.kBrushless);
         private SparkMaxConfig primaryConfig = new SparkMaxConfig();
         private SparkMaxConfig secondaryConfig = new SparkMaxConfig();
         private SparkClosedLoopController m_PrimaryController = m_PrimaryMotor.getClosedLoopController();
+        private SparkClosedLoopController m_SecondaryController = m_SecondaryMotor.getClosedLoopController();
 
         private SparkLimitSwitch forwardLimitSwitch;
         private SparkLimitSwitch reverseLimitSwitch;
@@ -38,7 +39,9 @@ public class AlgaeSubsystem extends SubsystemBase {
                                 .inverted(true)
                                 .idleMode(IdleMode.kBrake);
 
-                secondaryConfig.follow(m_PrimaryMotor.getDeviceId(), true);
+                secondaryConfig
+                                .inverted(true)
+                                .idleMode(IdleMode.kBrake);
 
                 forwardLimitSwitch = m_PrimaryMotor.getForwardLimitSwitch();
                 reverseLimitSwitch = m_PrimaryMotor.getReverseLimitSwitch();

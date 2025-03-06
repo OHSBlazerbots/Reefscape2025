@@ -176,35 +176,23 @@ public class RobotContainer {
 
                 m_CodrivController
                                 .povDown()
-                                .onTrue(m_moveToL4)// L1 level
-                                                   // values
-                                                   // need to be
-                                                   // found
+                                .onTrue(m_moveToL4)
                                 .onFalse(Commands.none());
 
                 m_CodrivController
                                 .povRight()
-                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorPosition(0)))// L2 level
-                                                                                                           // values
-                                                                                                           // need to be
-                                                                                                           // found
-                                .onFalse(Commands.none());
-
-                m_CodrivController
-                                .povUp()
-                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorPosition(0)))// L3 level
-                                                                                                           // values
-                                                                                                           // need to be
-                                                                                                           // found
-                                .onFalse(Commands.none());
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(2000)))
+                                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
 
                 m_CodrivController
                                 .povLeft()
-                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorPosition(0)))// L4 level
-                                                                                                           // values
-                                                                                                           // need to be
-                                                                                                           // found
-                                .onFalse(Commands.none());
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(-2000)))
+                                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+
+                m_CodrivController
+                                .povUp()
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(1000)))
+                                .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
 
         }
 
