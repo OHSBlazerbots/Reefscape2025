@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.MoveCoralToLs;
 import frc.robot.subsystems.ArmJointsSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriverCameraSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 import swervelib.SwerveInputStream;
@@ -37,7 +38,7 @@ public class RobotContainer {
         private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
         private final ArmJointsSubsystem m_ArmJointsSubsystem = new ArmJointsSubsystem();
         private final GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
-
+        private final DriverCameraSubsystem m_DriverCameraSubsystem = new DriverCameraSubsystem();
         private final DriveSubsystem drivebase = new DriveSubsystem(new File(Filesystem.getDeployDirectory(),
                         "swerve/neo"));
 
