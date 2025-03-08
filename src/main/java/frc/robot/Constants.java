@@ -47,34 +47,34 @@ public final class Constants {
   }
 
   public static class ElevatorConstants {
-    public static final int kPrimaryElevatorMotorPort = 13;
-    public static final int kSecondaryElevatorMotorPort = 12;
-    public static final int kForwardSoftLimitRotations = 50;
-    public static final int kReverseSoftLimitRotations = -50;
+    public static final int kPrimaryElevatorMotorPort = 9;
+    public static final int kSecondaryElevatorMotorPort = 10;
+    public static final int kForwardSoftLimitRotations = 47;
+    public static final int kReverseSoftLimitRotations = 0;
 
   }
 
   public static class ArmJointsConstants {
-    public static final int kArmMotorPort = 9;
-    public static final int kArmForwardSoftLimitRotations = 15;
-    public static final int kArmReverseSoftLimitRotations = -15;
+    public static final int kArmMotorPort = 11;
+    public static final int kArmForwardSoftLimitRotations = 75;
+    public static final int kArmReverseSoftLimitRotations = 0;
   }
 
   public static class GrabberConstants {
-    public static final int kGrabberMotorPort = 14;
+    public static final int kGrabberMotorPort = 12;
 
   }
 
   public static class AlgaeConstants {
-    public static final int kAlgaePrimaryMotorPort = 0;
-    public static final int kAlgaeSecondaryMotorPort = 0;
+    public static final int kAlgaePrimaryMotorPort = 69;
+    public static final int kAlgaeSecondaryMotorPort = 70;
     public static final int kAlgaeForwardSoftLimitRotations = 0;
     public static final int kAlgaeReverseSoftLimitRotations = 0;
   }
 
   public static class PullUpConstants {
-    public static final int kPullUpPrimaryMotorPort = 0;
-    public static final int kPullUpSecondaryMotorPort = 0;
+    public static final int kPullUpPrimaryMotorPort = 80;
+    public static final int kPullUpSecondaryMotorPort = 90;
     public static final int kPullUpForwardSoftLimitRotations = 50;
     public static final int kPullUpReverseSoftLimitRotations = -50;
   }
