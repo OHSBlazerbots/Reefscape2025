@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.MoveCoralToLs;
+import frc.robot.commands.Autos;
 import frc.robot.subsystems.ArmJointsSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriverCameraSubsystem;
@@ -38,6 +39,8 @@ public class RobotContainer {
         private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
         private final ArmJointsSubsystem m_ArmJointsSubsystem = new ArmJointsSubsystem();
         private final GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
+
+
         private final DriverCameraSubsystem m_DriverCameraSubsystem = new DriverCameraSubsystem();
         private final DriveSubsystem drivebase = new DriveSubsystem(new File(Filesystem.getDeployDirectory(),
                         "swerve/neo"));
@@ -48,6 +51,8 @@ public class RobotContainer {
         SendableChooser<Command> m_chooser = new SendableChooser<>();
         private Command m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
                         47, 75);
+        private Command FirstAuto = drivebase.getAutonomousCommand("FirstAuto");
+
 
         SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                         () -> m_DrivController.getLeftY() * -1,
@@ -144,6 +149,8 @@ public class RobotContainer {
                 m_DrivController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
                 m_DrivController.rightBumper().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
                 m_DrivController.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+                m_DrivController.povLeft().whileTrue(FirstAuto);
+
                 m_DrivController.back().whileTrue(drivebase.centerModulesCommand());
                 m_CodrivController
                                 .y()
@@ -204,7 +211,8 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
                 // An example command will be run in autonomous
-                return null;
+                return FirstAuto;
+
                 // Autos.exampleAuto(m_elevatorSubsystem);
                 // return drivebase.getAutonomousCommand("New Auto");
         }
