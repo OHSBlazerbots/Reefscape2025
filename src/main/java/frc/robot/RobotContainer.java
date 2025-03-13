@@ -11,10 +11,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.MoveCoralToLs;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.ArmJointsSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -46,6 +48,9 @@ public class RobotContainer {
         private final CommandXboxController m_DrivController = new CommandXboxController(0);
         private final CommandXboxController m_CodrivController = new CommandXboxController(1);
 
+        SendableChooser<Command> m_chooser = new SendableChooser<>();
+        private Command m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
+                        47, 75);
         private Command FirstAuto = drivebase.getAutonomousCommand("FirstAuto");
 
 
@@ -149,23 +154,23 @@ public class RobotContainer {
                 m_DrivController.back().whileTrue(drivebase.centerModulesCommand());
                 m_CodrivController
                                 .y()
-                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(1000)))
-                                .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorPosition(47)))
+                                .onFalse(Commands.none());
 
                 m_CodrivController
                                 .a()
-                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(-1000)))
-                                .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorPosition(0)))
+                                .onFalse(Commands.none());
 
                 m_CodrivController
                                 .b()
-                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(5000)))
-                                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointPosition(75)))
+                                .onFalse(Commands.none());
 
                 m_CodrivController
                                 .x()
-                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(-5000)))
-                                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointPosition(0)))
+                                .onFalse(Commands.none());
 
                 m_CodrivController
                                 .rightBumper()
@@ -176,6 +181,31 @@ public class RobotContainer {
                                 .leftBumper()
                                 .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(5000)))
                                 .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
+
+                m_CodrivController
+                                .povDown()
+                                .onTrue(m_moveToL4)
+                                .onFalse(Commands.none());
+
+                m_CodrivController
+                                .povRight()
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(2000)))
+                                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+
+                m_CodrivController
+                                .povLeft()
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(-2000)))
+                                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+
+                m_CodrivController
+                                .start()
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(1000)))
+                                .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+                m_CodrivController
+                                .back()
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(-1000)))
+                                .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+
         }
 
         /**
