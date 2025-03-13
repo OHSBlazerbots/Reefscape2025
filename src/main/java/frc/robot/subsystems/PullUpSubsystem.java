@@ -18,15 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PullUpConstants;
 
-//This is climbing
 public class PullUpSubsystem extends SubsystemBase {
 
         private SparkMax m_PrimaryMotor = new SparkMax(PullUpConstants.kPullUpPrimaryMotorPort,
                         MotorType.kBrushless);
-        private SparkMax m_SecondaryMotor = new SparkMax(PullUpConstants.kPullUpSecondaryMotorPort,
-                        MotorType.kBrushless);
         private SparkMaxConfig primaryConfig = new SparkMaxConfig();
-        private SparkMaxConfig secondaryConfig = new SparkMaxConfig();
         private SparkClosedLoopController m_PullUpPrimaryController = m_PrimaryMotor.getClosedLoopController();
 
         private SparkLimitSwitch forwardLimitSwitch;
@@ -39,7 +35,6 @@ public class PullUpSubsystem extends SubsystemBase {
                                 .inverted(true)
                                 .idleMode(IdleMode.kBrake);
 
-                secondaryConfig.follow(m_PrimaryMotor.getDeviceId(), true);
 
                 forwardLimitSwitch = m_PrimaryMotor.getForwardLimitSwitch();
                 reverseLimitSwitch = m_PrimaryMotor.getReverseLimitSwitch();
@@ -87,11 +82,9 @@ public class PullUpSubsystem extends SubsystemBase {
                                 .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
                 m_PrimaryMotor.configure(primaryConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-                m_SecondaryMotor.configure(secondaryConfig, ResetMode.kResetSafeParameters,
-                                PersistMode.kPersistParameters);
 
                 encoder.setPosition(0);
-                SmartDashboard.setDefaultBoolean("Pullp/direction", true);
+                SmartDashboard.setDefaultBoolean("Pullup/direction", true);
                 SmartDashboard.setDefaultNumber("PullUp/Target Position", 0);
                 SmartDashboard.setDefaultNumber("PullUp/Target Velocity", 0);
                 SmartDashboard.setDefaultBoolean("PullUp/Control Mode", false);
@@ -115,7 +108,6 @@ public class PullUpSubsystem extends SubsystemBase {
                 SmartDashboard.putNumber("PullUp/Position", encoder.getPosition());
 
                 SmartDashboard.putNumber("PullUp/PrimaryMotor set output", m_PrimaryMotor.get());
-                SmartDashboard.putNumber("PullUp/SecondaryMotor set output", m_SecondaryMotor.get());
 
                 SmartDashboard.putNumber("PullUp/Actual Position", encoder.getPosition());
                 SmartDashboard.putNumber("PullUp/Actual Velocity", encoder.getVelocity());

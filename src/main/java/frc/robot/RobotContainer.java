@@ -8,6 +8,7 @@ import java.io.File;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -101,6 +102,8 @@ public class RobotContainer {
                 // Configure the trigger bindings
                 configureBindings();
                 DriverStation.silenceJoystickConnectionWarning(true);
+                WebServer.start(5800, Filesystem.getDeployDirectory().getPath() + "/Dashboard");
+
         }
 
         /**
@@ -201,6 +204,16 @@ public class RobotContainer {
                                 .povUp()
                                 .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(1000)))
                                 .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+
+                m_CodrivController
+                                .rightTrigger()
+                                .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(2000)))
+                                .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
+                
+                m_CodrivController
+                                .leftTrigger()
+                                .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(-2000)))
+                                .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
 
         }
 
