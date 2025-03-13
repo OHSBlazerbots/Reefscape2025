@@ -198,8 +198,12 @@ public class RobotContainer {
                                 .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
 
                 m_CodrivController
-                                .povUp()
+                                .start()
                                 .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(1000)))
+                                .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+                m_CodrivController
+                                .back()
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(-1000)))
                                 .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
 
         }
