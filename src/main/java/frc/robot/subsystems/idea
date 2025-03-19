@@ -1,0 +1,12 @@
+Things we need to do for next meeting-
+Add in all the correct values for the swerve
+Testing out the roboto to see if it can drive
+Testing elevator to the Crescendo Shooter
+Figure out the code for absolute encoder for elevator
+    if test go well then copy and paste the code for the other subsystem such as arm and claw
+Work on vision code for the photon vision side
+
+Things we need to do but not important-
+Start thinking about dashboard
+Figure out controller mapping
+Lights subsystem maybe
