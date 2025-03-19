@@ -31,6 +31,7 @@ public class GrabberSubsystem extends SubsystemBase {
     public GrabberSubsystem() {
 
         primaryConfig
+                .inverted(true)
                 .idleMode(IdleMode.kBrake);
 
         forwardLimitSwitch = m_GrabberMotor.getForwardLimitSwitch();

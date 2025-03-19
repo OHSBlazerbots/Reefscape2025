@@ -45,6 +45,9 @@ public class AlgaeSubsystem extends SubsystemBase {
                 intakeForwardLimitSwitch = IntakeMotor.getForwardLimitSwitch();
                 intakeReverseLimitSwitch = IntakeMotor.getReverseLimitSwitch();
                 intakeEncoder = IntakeMotor.getEncoder();
+                IntakeConfig
+                                .inverted(true)
+                                .idleMode(IdleMode.kBrake);
 
                 IntakeConfig.limitSwitch
                                 .forwardLimitSwitchType(Type.kNormallyOpen)

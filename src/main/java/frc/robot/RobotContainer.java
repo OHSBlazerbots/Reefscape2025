@@ -8,17 +8,19 @@ import java.io.File;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.MoveCoralToLs;
 import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.ArmJointsSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriverCameraSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 import swervelib.SwerveInputStream;
@@ -39,11 +41,17 @@ public class RobotContainer {
         private final GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
         private final AlgaeSubsystem m_AlgaeSubsystem = new AlgaeSubsystem();
 
+        private final DriverCameraSubsystem m_DriverCameraSubsystem = new DriverCameraSubsystem();
         private final DriveSubsystem drivebase = new DriveSubsystem(new File(Filesystem.getDeployDirectory(),
                         "swerve/neo"));
 
         private final CommandXboxController m_DrivController = new CommandXboxController(0);
         private final CommandXboxController m_CodrivController = new CommandXboxController(1);
+
+        SendableChooser<Command> m_chooser = new SendableChooser<>();
+        private Command m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
+                        47, 75);
+        private Command FirstAuto = drivebase.getAutonomousCommand("FirstAuto");
 
         SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                         () -> m_DrivController.getLeftY() * -1,
@@ -134,91 +142,96 @@ public class RobotContainer {
                         m_DrivController.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
 
                 }
-                if (DriverStation.isTest()) {
-                        drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command
-                                                                                         // above!
+                drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command
+                                                                                 // above!
 
-                        m_DrivController.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-                        m_DrivController.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
-                        m_DrivController.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-                        m_DrivController.back().whileTrue(drivebase.centerModulesCommand());
-                        m_DrivController.leftBumper().onTrue(Commands.none());
-                        m_DrivController.rightBumper().onTrue(Commands.none());
-                } else {
-                        m_DrivController.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-                        m_DrivController.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-                        m_DrivController.b().whileTrue(
-                                        drivebase.driveToPose(
-                                                        new Pose2d(new Translation2d(4, 4),
-                                                                        Rotation2d.fromDegrees(0))));
-                        m_DrivController.start().whileTrue(Commands.none());
-                        m_DrivController.back().whileTrue(Commands.none());
-                        m_DrivController.leftBumper()
-                                        .whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-                        m_DrivController.rightBumper().onTrue(Commands.none());
-                }
-                m_CodrivController
-                                .b()
-                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(500)))
-                                .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+                m_DrivController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+                m_DrivController.rightBumper().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
+                m_DrivController.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+                m_DrivController.povLeft().whileTrue(FirstAuto);
 
-                m_CodrivController
-                                .x()
-                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(-500)))
-                                .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
-
+                m_DrivController.back().whileTrue(drivebase.centerModulesCommand());
                 m_CodrivController
                                 .y()
-                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(500)))
-                                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorPosition(47)))
+                                .onFalse(Commands.none());
 
                 m_CodrivController
                                 .a()
-                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(-500)))
-                                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorPosition(0)))
+                                .onFalse(Commands.none());
 
                 m_CodrivController
-                                .leftBumper()
-                                .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(500)))
-                                .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
+                                .b()
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointPosition(75)))
+                                .onFalse(Commands.none());
+
+                m_CodrivController
+                                .x()
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointPosition(0)))
+                                .onFalse(Commands.none());
 
                 m_CodrivController
                                 .rightBumper()
-                                .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(-500)))
+                                .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(-5000)))
                                 .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
+
                 m_CodrivController
-                                .start()
-                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakePosition(200)))
-                                .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakePosition(0)));
-                m_CodrivController
-                                .back()
-                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakeVelocity(9000)))
-                                .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakeVelocity(0)));
+                                .leftBumper()
+                                .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(5000)))
+                                .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
+
                 m_CodrivController
                                 .povDown()
-                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelPosition(200)))
-                                .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelPosition(0)));
+                                .onTrue(m_moveToL4)
+                                .onFalse(Commands.none());
+
                 m_CodrivController
-                                .povUp()
-                                .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelVelocity(250)))
-                                .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelVelocity(0)));
+                                .povRight()
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(2000)))
+                                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+
+                m_CodrivController
+                                .povLeft()
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(-2000)))
+                                .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
+
+                m_CodrivController
+                                .start()
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(1000)))
+                                .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+               // m_CodrivController
+               //                 .back()
+               //                 .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(-1000)))
+               //                 .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+               // m_CodrivController
+               //                 .start()
+              //                  .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakePosition(200)))
+             //                   .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakePosition(0)));
+             //   m_CodrivController
+            //                    .back()
+             //                   .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakeVelocity(9000)))
+              //                  .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setIntakeVelocity(0)));
+             //   m_CodrivController
+             //                   .povDown()
+             //                   .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelPosition(200)))
+             //                   .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelPosition(0)));
+             //   m_CodrivController
+              //                  .povUp()
+              //                  .onTrue(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelVelocity(250)))
+             //                   .onFalse(Commands.runOnce(() -> m_AlgaeSubsystem.setSwivelVelocity(0)));
 
         }
 
-        // *Use this
-
-        // to pass
-        // the autonomous
-        // command to
-        // the main
-        // {@link Robot}class.**@return
-        // the command
-        // to run
-        // in autonomous*/
-
+        /**
+         * Use this to pass the autonomous command to the main {@link Robot} class.
+         *
+         * @return the command to run in autonomous
+         */
         public Command getAutonomousCommand() {
                 // An example command will be run in autonomous
-                return null;
+                return FirstAuto;
+
                 // Autos.exampleAuto(m_elevatorSubsystem);
                 // return drivebase.getAutonomousCommand("New Auto");
         }
