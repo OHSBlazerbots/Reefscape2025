@@ -73,10 +73,9 @@ public final class Constants {
   }
 
   public static class PullUpConstants {
-    public static final int kPullUpPrimaryMotorPort = 80;
-    public static final int kPullUpSecondaryMotorPort = 90;
-    public static final int kPullUpForwardSoftLimitRotations = 50;
-    public static final int kPullUpReverseSoftLimitRotations = -50;
+    public static final int kPullUpPrimaryMotorPort = 13;
+    public static final int kPullUpForwardSoftLimitRotations = 44;
+    public static final int kPullUpReverseSoftLimitRotations = -10;
   }
 
  

@@ -22,6 +22,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriverCameraSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
+import frc.robot.subsystems.PullUpSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
 import swervelib.SwerveInputStream;
 
@@ -41,6 +42,7 @@ public class RobotContainer {
         private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
         private final ArmJointsSubsystem m_ArmJointsSubsystem = new ArmJointsSubsystem();
         private final GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
+        private final PullUpSubsystem m_PullUpSubsystem = new PullUpSubsystem();
 
         private final DriverCameraSubsystem m_DriverCameraSubsystem = new DriverCameraSubsystem();
         private final DriveSubsystem drivebase = new DriveSubsystem(new File(Filesystem.getDeployDirectory(),
@@ -100,7 +102,6 @@ public class RobotContainer {
         public RobotContainer() {
                 // Configure the trigger bindings
                 configureBindings();
-                DriverStation.silenceJoystickConnectionWarning(true);
         }
 
         /**
@@ -201,10 +202,21 @@ public class RobotContainer {
                                 .start()
                                 .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(1000)))
                                 .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+
                 m_CodrivController
                                 .back()
                                 .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(-1000)))
                                 .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+
+                m_CodrivController
+                                .rightTrigger()
+                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(1000)))
+                                .onFalse(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpVelocity(0)));
+                
+                 m_CodrivController
+                                .leftTrigger()
+                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(-1000)))
+                                .onFalse(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpVelocity(0)));
 
         }
 
