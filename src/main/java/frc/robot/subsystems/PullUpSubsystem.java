@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -27,7 +28,7 @@ public class PullUpSubsystem extends SubsystemBase {
 
         private SparkLimitSwitch forwardLimitSwitch;
         private SparkLimitSwitch reverseLimitSwitch;
-        private RelativeEncoder encoder;
+        private AbsoluteEncoder encoder;
 
         public PullUpSubsystem() {
 
@@ -38,7 +39,7 @@ public class PullUpSubsystem extends SubsystemBase {
 
                 forwardLimitSwitch = m_PrimaryMotor.getForwardLimitSwitch();
                 reverseLimitSwitch = m_PrimaryMotor.getReverseLimitSwitch();
-                encoder = m_PrimaryMotor.getEncoder();
+                encoder = m_PrimaryMotor.getAbsoluteEncoder();
 
                 primaryConfig.limitSwitch
                                 .forwardLimitSwitchType(Type.kNormallyOpen)
@@ -82,9 +83,10 @@ public class PullUpSubsystem extends SubsystemBase {
                                 .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
                 m_PrimaryMotor.configure(primaryConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+               
 
-                encoder.setPosition(0);
-                SmartDashboard.setDefaultBoolean("Pullup/direction", true);
+                // encoder.setPosition(0);
+                SmartDashboard.setDefaultBoolean("PullUp/direction", true);
                 SmartDashboard.setDefaultNumber("PullUp/Target Position", 0);
                 SmartDashboard.setDefaultNumber("PullUp/Target Velocity", 0);
                 SmartDashboard.setDefaultBoolean("PullUp/Control Mode", false);
@@ -112,11 +114,11 @@ public class PullUpSubsystem extends SubsystemBase {
                 SmartDashboard.putNumber("PullUp/Actual Position", encoder.getPosition());
                 SmartDashboard.putNumber("PullUp/Actual Velocity", encoder.getVelocity());
 
-                if (SmartDashboard.getBoolean("PullUp/Reset Encoder", false)) {
-                        SmartDashboard.putBoolean("PullUp/Reset Encoder", false);
-                        // Reset the encoder position to 0
-                        encoder.setPosition(0);
-                }
+                // if (SmartDashboard.getBoolean("PullUp/Reset Encoder", false)) {
+                //         SmartDashboard.putBoolean("PullUp/Reset Encoder", false);
+                //         // Reset the encoder position to 0
+                //         encoder.setPosition(0);
+                // }
         }
 
 }

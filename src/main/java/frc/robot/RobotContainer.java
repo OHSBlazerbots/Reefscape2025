@@ -18,12 +18,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.MoveCoralToLs;
-import frc.robot.commands.Autos;
 import frc.robot.subsystems.ArmJointsSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriverCameraSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
+import frc.robot.subsystems.PullUpSubsystem;
+import frc.robot.subsystems.LightingSubsystem;
 import swervelib.SwerveInputStream;
 
 /**
@@ -37,10 +38,12 @@ import swervelib.SwerveInputStream;
  */
 public class RobotContainer {
         // The robot's subsystems and commands are defined here...
+
+        private final LightingSubsystem m_LightingSubsystem = new LightingSubsystem();
         private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
         private final ArmJointsSubsystem m_ArmJointsSubsystem = new ArmJointsSubsystem();
         private final GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
-
+        private final PullUpSubsystem m_PullUpSubsystem = new PullUpSubsystem();
 
         private final DriverCameraSubsystem m_DriverCameraSubsystem = new DriverCameraSubsystem();
         private final DriveSubsystem drivebase = new DriveSubsystem(new File(Filesystem.getDeployDirectory(),
@@ -53,7 +56,6 @@ public class RobotContainer {
         private Command m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
                         47, 75);
         private Command FirstAuto = drivebase.getAutonomousCommand("FirstAuto");
-
 
         SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                         () -> m_DrivController.getLeftY() * -1,
@@ -101,7 +103,6 @@ public class RobotContainer {
         public RobotContainer() {
                 // Configure the trigger bindings
                 configureBindings();
-                DriverStation.silenceJoystickConnectionWarning(true);
                 WebServer.start(5800, Filesystem.getDeployDirectory().getPath() + "/Dashboard");
 
         }
@@ -201,19 +202,24 @@ public class RobotContainer {
                                 .onFalse(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointVelocity(0)));
 
                 m_CodrivController
-                                .povUp()
+                                .start()
                                 .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(1000)))
                                 .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
 
                 m_CodrivController
-                                .rightTrigger()
-                                .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(2000)))
-                                .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
-                
+                                .back()
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(-1000)))
+                                .onFalse(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+
                 m_CodrivController
+                                .rightTrigger()
+                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(1000)))
+                                .onFalse(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpVelocity(0)));
+                
+                 m_CodrivController
                                 .leftTrigger()
-                                .onTrue(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(-2000)))
-                                .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
+                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(-1000)))
+                                .onFalse(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpVelocity(0)));
 
         }
 
