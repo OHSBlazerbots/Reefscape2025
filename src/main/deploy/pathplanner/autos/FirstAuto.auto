@@ -9,6 +9,18 @@
           "data": {
             "pathName": "FirstPath"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefToCoralStation"
+          }
         }
       ]
     }
