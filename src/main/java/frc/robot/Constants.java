@@ -49,7 +49,7 @@ public final class Constants {
   public static class ElevatorConstants {
     public static final int kPrimaryElevatorMotorPort = 9;
     public static final int kSecondaryElevatorMotorPort = 10;
-    public static final int kForwardSoftLimitRotations = 47;
+    public static final int kForwardSoftLimitRotations = 78;
     public static final int kReverseSoftLimitRotations = 0;
 
   }
@@ -78,5 +78,4 @@ public final class Constants {
     public static final int kPullUpReverseSoftLimitRotations = -10;
   }
 
- 
 }

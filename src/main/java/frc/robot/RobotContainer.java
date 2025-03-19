@@ -130,7 +130,7 @@ public class RobotContainer {
 
                 SendableChooser<Command> m_chooser = new SendableChooser<>();
                 m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
-                                47, 75);
+                                78, 75);
 
                 NamedCommands.registerCommand("L4Score", m_moveToL4);
                 FirstAuto = drivebase.getAutonomousCommand("FirstAuto");
@@ -189,7 +189,7 @@ public class RobotContainer {
                 m_DrivController.back().whileTrue(drivebase.centerModulesCommand());
                 m_CodrivController
                                 .y()
-                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorPosition(47)))
+                                .onTrue(Commands.runOnce(() -> m_elevatorSubsystem.setElevatorPosition(78)))
                                 .onFalse(Commands.none());
 
                 m_CodrivController

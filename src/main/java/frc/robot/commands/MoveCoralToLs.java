@@ -38,10 +38,14 @@ public class MoveCoralToLs extends Command {
         m_ArmJoint.setArmJointPosition(aPose);
         Timer.delay(1);
         m_Grabber.setGrabberVelocity(5000);
-        Timer.delay(1.5);
+        Timer.delay(1);
         m_Grabber.setGrabberVelocity(0);
+        System.out.println("Robot reset");
         m_ArmJoint.setArmJointPosition(0);
         m_Elevator.setElevatorPosition(0);
+        Timer.delay(1);
+        System.out.println("Robot done");
+
     }
 
     // Called once the command ends or is interrupted.
