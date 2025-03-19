@@ -66,10 +66,10 @@ public final class Constants {
   }
 
   public static class AlgaeConstants {
-    public static final int kAlgaePrimaryMotorPort = 69;
-    public static final int kAlgaeSecondaryMotorPort = 70;
-    public static final int kAlgaeForwardSoftLimitRotations = 0;
-    public static final int kAlgaeReverseSoftLimitRotations = 0;
+    public static final int kAlgaePrimaryMotorPort = 13;
+    public static final int kAlgaeSecondaryMotorPort = 14;
+    public static final int kAlgaeForwardSoftLimitRotations = -999;
+    public static final int kAlgaeReverseSoftLimitRotations = 999;
     public static final int kAlgaeUpSoftLimit = 10;
     public static final int kAlgaeDownSoftLimit = 0;
   }

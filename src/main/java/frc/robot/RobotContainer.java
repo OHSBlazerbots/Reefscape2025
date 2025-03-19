@@ -40,7 +40,6 @@ public class RobotContainer {
         private final ArmJointsSubsystem m_ArmJointsSubsystem = new ArmJointsSubsystem();
         private final GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
         private final AlgaeSubsystem m_AlgaeSubsystem = new AlgaeSubsystem();
-
         private final DriverCameraSubsystem m_DriverCameraSubsystem = new DriverCameraSubsystem();
         private final DriveSubsystem drivebase = new DriveSubsystem(new File(Filesystem.getDeployDirectory(),
                         "swerve/neo"));

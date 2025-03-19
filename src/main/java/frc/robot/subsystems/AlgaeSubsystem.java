@@ -152,10 +152,6 @@ public class AlgaeSubsystem extends SubsystemBase {
                 m_SwivelController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         }
 
-        public void setIntakePosition(double targetPosition) {
-                m_IntakeController.setReference(targetPosition, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        }
-
         @Override
         public void periodic() {
                 // Display data from SPARK onto the dashboard
