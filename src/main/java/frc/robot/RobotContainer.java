@@ -6,9 +6,10 @@ package frc.robot;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -22,8 +23,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriverCameraSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
-import frc.robot.subsystems.PullUpSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
+import frc.robot.subsystems.PullUpSubsystem;
 import swervelib.SwerveInputStream;
 
 /**
@@ -38,70 +39,103 @@ import swervelib.SwerveInputStream;
 public class RobotContainer {
         // The robot's subsystems and commands are defined here...
 
-        private final LightingSubsystem m_LightingSubsystem = new LightingSubsystem();
-        private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-        private final ArmJointsSubsystem m_ArmJointsSubsystem = new ArmJointsSubsystem();
-        private final GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
-        private final PullUpSubsystem m_PullUpSubsystem = new PullUpSubsystem();
+        private final LightingSubsystem m_LightingSubsystem;
+        private final ElevatorSubsystem m_elevatorSubsystem;
+        private final ArmJointsSubsystem m_ArmJointsSubsystem;
+        private final GrabberSubsystem m_GrabberSubsystem;
+        private final PullUpSubsystem m_PullUpSubsystem;
 
-        private final DriverCameraSubsystem m_DriverCameraSubsystem = new DriverCameraSubsystem();
-        private final DriveSubsystem drivebase = new DriveSubsystem(new File(Filesystem.getDeployDirectory(),
-                        "swerve/neo"));
+        private final DriverCameraSubsystem m_DriverCameraSubsystem;
+        private final DriveSubsystem drivebase;
 
-        private final CommandXboxController m_DrivController = new CommandXboxController(0);
-        private final CommandXboxController m_CodrivController = new CommandXboxController(1);
+        private final CommandXboxController m_DrivController;
+        private final CommandXboxController m_CodrivController;
 
         SendableChooser<Command> m_chooser = new SendableChooser<>();
-        private Command m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
-                        47, 75);
-        private Command FirstAuto = drivebase.getAutonomousCommand("FirstAuto");
-
-        SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                        () -> m_DrivController.getLeftY() * -1,
-                        () -> m_DrivController.getLeftX() * -1)
-                        .withControllerRotationAxis(m_DrivController::getRightX)
-                        .deadband(0.01) // replace value later
-                        .scaleTranslation(0.8)
-                        .allianceRelativeControl(true);
-
+        private Command m_moveToL4;
+        private Command FirstAuto;
+        SwerveInputStream driveAngularVelocity;
         /**
          * Clone's the angular velocity input stream and converts it to a fieldRelative
          * input stream.
          */
-        SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
-                        .withControllerHeadingAxis(m_DrivController::getRightX,
-                                        m_DrivController::getRightY)
-                        .headingWhile(true);
-
+        SwerveInputStream driveDirectAngle;
         /**
          * Clone's the angular velocity input stream and converts it to a robotRelative
          * input stream.
          */
-        SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
-                        .allianceRelativeControl(false);
+        SwerveInputStream driveRobotOriented;
 
-        SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                        () -> -m_DrivController.getLeftY(),
-                        () -> -m_DrivController.getLeftX())
-                        .withControllerRotationAxis(() -> m_DrivController.getRawAxis(
-                                        2))
-                        .deadband(0.01)// replace value later
-                        .scaleTranslation(0.8)
-                        .allianceRelativeControl(true);
+        SwerveInputStream driveAngularVelocityKeyboard;
         // Derive the heading axis with math!
-        SwerveInputStream driveDirectAngleKeyboard = driveAngularVelocityKeyboard.copy()
-                        .withControllerHeadingAxis(() -> Math.sin(
-                                        m_DrivController.getRawAxis(2) * Math.PI) * (Math.PI * 2),
-                                        () -> Math.cos(
-                                                        m_DrivController.getRawAxis(2) * Math.PI) * (Math.PI * 2))
-                        .headingWhile(true);
+        SwerveInputStream driveDirectAngleKeyboard;
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
                 // Configure the trigger bindings
+                m_LightingSubsystem = new LightingSubsystem();
+                m_elevatorSubsystem = new ElevatorSubsystem();
+                m_ArmJointsSubsystem = new ArmJointsSubsystem();
+                m_GrabberSubsystem = new GrabberSubsystem();
+                m_PullUpSubsystem = new PullUpSubsystem();
+                m_DriverCameraSubsystem = new DriverCameraSubsystem();
+                drivebase = new DriveSubsystem(new File(Filesystem.getDeployDirectory(),
+                                "swerve/neo"));
+
+                m_DrivController = new CommandXboxController(0);
+                m_CodrivController = new CommandXboxController(1);
+
+                driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                () -> m_DrivController.getLeftY() * -1,
+                                () -> m_DrivController.getLeftX() * -1)
+                                .withControllerRotationAxis(m_DrivController::getRightX)
+                                .deadband(0.01) // replace value later
+                                .scaleTranslation(0.8)
+                                .allianceRelativeControl(true);
+
+                /**
+                 * Clone's the angular velocity input stream and converts it to a fieldRelative
+                 * input stream.
+                 */
+                driveDirectAngle = driveAngularVelocity.copy()
+                                .withControllerHeadingAxis(m_DrivController::getRightX,
+                                                m_DrivController::getRightY)
+                                .headingWhile(true);
+
+                /**
+                 * Clone's the angular velocity input stream and converts it to a robotRelative
+                 * input stream.
+                 */
+                driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
+                                .allianceRelativeControl(false);
+
+                driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                () -> -m_DrivController.getLeftY(),
+                                () -> -m_DrivController.getLeftX())
+                                .withControllerRotationAxis(() -> m_DrivController.getRawAxis(
+                                                2))
+                                .deadband(0.01)// replace value later
+                                .scaleTranslation(0.8)
+                                .allianceRelativeControl(true);
+                // Derive the heading axis with math!
+                driveDirectAngleKeyboard = driveAngularVelocityKeyboard.copy()
+                                .withControllerHeadingAxis(() -> Math.sin(
+                                                m_DrivController.getRawAxis(2) * Math.PI) * (Math.PI * 2),
+                                                () -> Math.cos(
+                                                                m_DrivController.getRawAxis(2) * Math.PI)
+                                                                * (Math.PI * 2))
+                                .headingWhile(true);
+
+                SendableChooser<Command> m_chooser = new SendableChooser<>();
+                m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
+                                47, 75);
+
+                NamedCommands.registerCommand("L4Score", m_moveToL4);
+                FirstAuto = drivebase.getAutonomousCommand("FirstAuto");
                 configureBindings();
+
         }
 
         /**
@@ -212,8 +246,8 @@ public class RobotContainer {
                                 .rightTrigger()
                                 .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(1000)))
                                 .onFalse(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpVelocity(0)));
-                
-                 m_CodrivController
+
+                m_CodrivController
                                 .leftTrigger()
                                 .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(-1000)))
                                 .onFalse(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpVelocity(0)));
