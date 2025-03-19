@@ -9,6 +9,12 @@
           "data": {
             "pathName": "FirstPath"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefToCoralStation"
+          }
         }
       ]
     }
