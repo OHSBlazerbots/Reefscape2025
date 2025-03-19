@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -23,15 +24,12 @@ public class PullUpSubsystem extends SubsystemBase {
 
         private SparkMax m_PrimaryMotor = new SparkMax(PullUpConstants.kPullUpPrimaryMotorPort,
                         MotorType.kBrushless);
-        private SparkMax m_SecondaryMotor = new SparkMax(PullUpConstants.kPullUpSecondaryMotorPort,
-                        MotorType.kBrushless);
         private SparkMaxConfig primaryConfig = new SparkMaxConfig();
-        private SparkMaxConfig secondaryConfig = new SparkMaxConfig();
         private SparkClosedLoopController m_PullUpPrimaryController = m_PrimaryMotor.getClosedLoopController();
 
         private SparkLimitSwitch forwardLimitSwitch;
         private SparkLimitSwitch reverseLimitSwitch;
-        private RelativeEncoder encoder;
+        private AbsoluteEncoder encoder;
 
         public PullUpSubsystem() {
 
@@ -39,11 +37,10 @@ public class PullUpSubsystem extends SubsystemBase {
                                 .inverted(true)
                                 .idleMode(IdleMode.kBrake);
 
-                secondaryConfig.follow(m_PrimaryMotor.getDeviceId(), true);
 
                 forwardLimitSwitch = m_PrimaryMotor.getForwardLimitSwitch();
                 reverseLimitSwitch = m_PrimaryMotor.getReverseLimitSwitch();
-                encoder = m_PrimaryMotor.getEncoder();
+                encoder = m_PrimaryMotor.getAbsoluteEncoder();
 
                 primaryConfig.limitSwitch
                                 .forwardLimitSwitchType(Type.kNormallyOpen)
@@ -87,11 +84,10 @@ public class PullUpSubsystem extends SubsystemBase {
                                 .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
                 m_PrimaryMotor.configure(primaryConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-                m_SecondaryMotor.configure(secondaryConfig, ResetMode.kResetSafeParameters,
-                                PersistMode.kPersistParameters);
+               
 
-                encoder.setPosition(0);
-                SmartDashboard.setDefaultBoolean("Pullp/direction", true);
+                // encoder.setPosition(0);
+                SmartDashboard.setDefaultBoolean("PullUp/direction", true);
                 SmartDashboard.setDefaultNumber("PullUp/Target Position", 0);
                 SmartDashboard.setDefaultNumber("PullUp/Target Velocity", 0);
                 SmartDashboard.setDefaultBoolean("PullUp/Control Mode", false);
@@ -115,16 +111,15 @@ public class PullUpSubsystem extends SubsystemBase {
                 SmartDashboard.putNumber("PullUp/Position", encoder.getPosition());
 
                 SmartDashboard.putNumber("PullUp/PrimaryMotor set output", m_PrimaryMotor.get());
-                SmartDashboard.putNumber("PullUp/SecondaryMotor set output", m_SecondaryMotor.get());
 
                 SmartDashboard.putNumber("PullUp/Actual Position", encoder.getPosition());
                 SmartDashboard.putNumber("PullUp/Actual Velocity", encoder.getVelocity());
 
-                if (SmartDashboard.getBoolean("PullUp/Reset Encoder", false)) {
-                        SmartDashboard.putBoolean("PullUp/Reset Encoder", false);
-                        // Reset the encoder position to 0
-                        encoder.setPosition(0);
-                }
+                // if (SmartDashboard.getBoolean("PullUp/Reset Encoder", false)) {
+                //         SmartDashboard.putBoolean("PullUp/Reset Encoder", false);
+                //         // Reset the encoder position to 0
+                //         encoder.setPosition(0);
+                // }
         }
 
 }
