@@ -144,13 +144,13 @@ public class Vision {
     }
     for (Cameras camera : Cameras.values()) {
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
-      System.out.println("get estiamated position before 147");
       if (poseEst != null && poseEst.isPresent()) {
-        System.out.println("get estiamated position after 147");
+        
         var pose = poseEst.get();
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
             pose.timestampSeconds,
             camera.curStdDevs);
+            System.out.println("Added vision measurement" + pose.toString());
       }
     }
 
