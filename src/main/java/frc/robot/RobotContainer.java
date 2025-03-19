@@ -8,6 +8,7 @@ import java.io.File;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -102,6 +103,8 @@ public class RobotContainer {
         public RobotContainer() {
                 // Configure the trigger bindings
                 configureBindings();
+                WebServer.start(5800, Filesystem.getDeployDirectory().getPath() + "/Dashboard");
+
         }
 
         /**
