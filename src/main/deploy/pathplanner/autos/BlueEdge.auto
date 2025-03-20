@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "FirstPath"
+            "pathName": "Straight1"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "L3Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ReefToCoralStation"
           }
         }
       ]
