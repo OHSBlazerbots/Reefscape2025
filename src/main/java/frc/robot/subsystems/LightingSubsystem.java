@@ -35,7 +35,7 @@ public class LightingSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // setPink();
+        setPink();
     }
 
     public void pinkWhiteStrobe() {
