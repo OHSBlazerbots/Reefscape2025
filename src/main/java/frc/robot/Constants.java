@@ -51,13 +51,16 @@ public final class Constants {
     public static final int kSecondaryElevatorMotorPort = 10;
     public static final int kForwardSoftLimitRotations = 78;
     public static final int kReverseSoftLimitRotations = 0;
+    public static final int maxElevatorHeight = 78;
 
   }
 
   public static class ArmJointsConstants {
     public static final int kArmMotorPort = 11;
-    public static final int kArmForwardSoftLimitRotations = 75;
+    public static final int kArmForwardSoftLimitRotations = 100;//75
     public static final int kArmReverseSoftLimitRotations = 0;
+    public static final int l4ArmAngle = 78;
+  
   }
 
   public static class GrabberConstants {
@@ -74,8 +77,8 @@ public final class Constants {
 
   public static class PullUpConstants {
     public static final int kPullUpPrimaryMotorPort = 13;
-    public static final int kPullUpForwardSoftLimitRotations = 44;
-    public static final int kPullUpReverseSoftLimitRotations = -10;
+    public static final int kPullUpForwardSoftLimitRotations = 999; //44
+    public static final int kPullUpReverseSoftLimitRotations = -999; //-10
   }
 
 }

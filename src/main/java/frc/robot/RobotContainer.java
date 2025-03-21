@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.*;
 import frc.robot.commands.MoveCoralToLs;
 import frc.robot.subsystems.ArmJointsSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -130,7 +131,7 @@ public class RobotContainer {
 
                 SendableChooser<Command> m_chooser = new SendableChooser<>();
                 m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
-                                78, 75);
+                ElevatorConstants.maxElevatorHeight, ArmJointsConstants.l4ArmAngle);
 
                 NamedCommands.registerCommand("L4Score", m_moveToL4);
                 FirstAuto = drivebase.getAutonomousCommand("FirstAuto");
@@ -218,6 +219,11 @@ public class RobotContainer {
                                 .onFalse(Commands.runOnce(() -> m_GrabberSubsystem.setGrabberVelocity(0)));
 
                 m_CodrivController
+                                .povUp()
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointPosition(78)))
+                                .onFalse(Commands.none());
+
+                m_CodrivController
                                 .povDown()
                                 .onTrue(m_moveToL4)
                                 .onFalse(Commands.none());
@@ -244,12 +250,12 @@ public class RobotContainer {
 
                 m_CodrivController
                                 .rightTrigger()
-                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(1000)))
+                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(500)))
                                 .onFalse(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpVelocity(0)));
 
                 m_CodrivController
                                 .leftTrigger()
-                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(-1000)))
+                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(-500)))
                                 .onFalse(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpVelocity(0)));
 
         }
