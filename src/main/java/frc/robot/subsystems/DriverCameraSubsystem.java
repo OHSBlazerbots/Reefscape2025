@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriverCameraSubsystem extends SubsystemBase {
     UsbCamera armCamera;
+    UsbCamera backCamera;
     NetworkTableEntry cameraSelection;
     int currentCameraIndex = 0;
     VideoSink cameraServer;
@@ -16,9 +17,13 @@ public class DriverCameraSubsystem extends SubsystemBase {
 
     public DriverCameraSubsystem() {
         armCamera = CameraServer.startAutomaticCapture(0); // 0 is placeholder
+        // backCamera = CameraServer.startAutomaticCapture(1); // 0 is placeholder
         cameraServer = CameraServer.getServer();
-        allCameras = new UsbCamera[] { armCamera, };
-        armCamera.setResolution(424, 240);
+        allCameras = new UsbCamera[] { armCamera };
+        armCamera.setResolution(160, 120);
         armCamera.setFPS(30);
+        // backCamera.setResolution(424, 240);
+        // backCamera.setFPS(30);
+
     }
 }
