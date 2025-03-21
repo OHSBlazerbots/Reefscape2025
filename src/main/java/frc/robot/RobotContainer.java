@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -54,7 +55,13 @@ public class RobotContainer {
 
         SendableChooser<Command> m_chooser = new SendableChooser<>();
         private Command m_moveToL4;
+        private Command m_moveToL3;
         private Command FirstAuto;
+        private Command StraightAuto;
+        private Command Middle;
+        private Command RedEdge;
+        private Command BlueEdge;
+        private Command SafetyAuto;
         SwerveInputStream driveAngularVelocity;
         /**
          * Clone's the angular velocity input stream and converts it to a fieldRelative
@@ -76,7 +83,7 @@ public class RobotContainer {
          */
         public RobotContainer() {
                 // Configure the trigger bindings
-                m_LightingSubsystem = new LightingSubsystem();
+                m_LightingSubsystem = new LightingSubsystem();  
                 m_elevatorSubsystem = new ElevatorSubsystem();
                 m_ArmJointsSubsystem = new ArmJointsSubsystem();
                 m_GrabberSubsystem = new GrabberSubsystem();
@@ -87,6 +94,15 @@ public class RobotContainer {
 
                 m_DrivController = new CommandXboxController(0);
                 m_CodrivController = new CommandXboxController(1);
+
+                m_chooser.addOption("Default", StraightAuto);
+                m_chooser.addOption("ToReeftoStation", FirstAuto);
+                m_chooser.addOption("SafetyAuto", SafetyAuto);
+                m_chooser.addOption("Middle", Middle);
+                m_chooser.addOption("RedEdge", RedEdge);
+                m_chooser.addOption("BlueEdge", BlueEdge);
+
+                SmartDashboard.putData(m_chooser);      
 
                 driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                 () -> m_DrivController.getLeftY() * -1,
@@ -130,11 +146,22 @@ public class RobotContainer {
                                 .headingWhile(true);
 
                 SendableChooser<Command> m_chooser = new SendableChooser<>();
+          
                 m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
                 ElevatorConstants.maxElevatorHeight, ArmJointsConstants.l4ArmAngle);
+          
+                m_moveToL3 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem, 
+                                0, 75);
+
 
                 NamedCommands.registerCommand("L4Score", m_moveToL4);
+                NamedCommands.registerCommand("L3Score", m_moveToL3);
                 FirstAuto = drivebase.getAutonomousCommand("FirstAuto");
+                StraightAuto = drivebase.getAutonomousCommand("drive straight");
+                RedEdge = drivebase.getAutonomousCommand("RedEdge");
+                BlueEdge = drivebase.getAutonomousCommand("BlueEdge"); 
+                Middle = drivebase.getAutonomousCommand("Middle");
+                SafetyAuto = drivebase.getAutonomousCommand("SafetyAuto"); 
                 configureBindings();
 
         }
@@ -267,7 +294,10 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
                 // An example command will be run in autonomous
-                return FirstAuto;
+                return m_chooser.getSelected();
+                //return StraightAuto;
+                //return FirstAuto;
+                
 
                 // Autos.exampleAuto(m_elevatorSubsystem);
                 // return drivebase.getAutonomousCommand("New Auto");
