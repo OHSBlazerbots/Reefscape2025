@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.*;
+import frc.robot.Constants.ArmJointsConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.commands.MoveCoralToLs;
 import frc.robot.subsystems.ArmJointsSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -83,7 +84,7 @@ public class RobotContainer {
          */
         public RobotContainer() {
                 // Configure the trigger bindings
-                m_LightingSubsystem = new LightingSubsystem();  
+                m_LightingSubsystem = new LightingSubsystem();
                 m_elevatorSubsystem = new ElevatorSubsystem();
                 m_ArmJointsSubsystem = new ArmJointsSubsystem();
                 m_GrabberSubsystem = new GrabberSubsystem();
@@ -102,7 +103,7 @@ public class RobotContainer {
                 m_chooser.addOption("RedEdge", RedEdge);
                 m_chooser.addOption("BlueEdge", BlueEdge);
 
-                SmartDashboard.putData(m_chooser);      
+                SmartDashboard.putData(m_chooser);
 
                 driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                 () -> m_DrivController.getLeftY() * -1,
@@ -146,22 +147,21 @@ public class RobotContainer {
                                 .headingWhile(true);
 
                 SendableChooser<Command> m_chooser = new SendableChooser<>();
-          
-                m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
-                ElevatorConstants.maxElevatorHeight, ArmJointsConstants.l4ArmAngle);
-          
-                m_moveToL3 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem, 
-                                0, 75);
 
+                m_moveToL4 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
+                                ElevatorConstants.maxElevatorHeight, ArmJointsConstants.l4ArmAngleAuto);
+
+                m_moveToL3 = new MoveCoralToLs(m_elevatorSubsystem, m_ArmJointsSubsystem, m_GrabberSubsystem,
+                                0, 75);
 
                 NamedCommands.registerCommand("L4Score", m_moveToL4);
                 NamedCommands.registerCommand("L3Score", m_moveToL3);
                 FirstAuto = drivebase.getAutonomousCommand("FirstAuto");
                 StraightAuto = drivebase.getAutonomousCommand("drive straight");
                 RedEdge = drivebase.getAutonomousCommand("RedEdge");
-                BlueEdge = drivebase.getAutonomousCommand("BlueEdge"); 
+                BlueEdge = drivebase.getAutonomousCommand("BlueEdge");
                 Middle = drivebase.getAutonomousCommand("Middle");
-                SafetyAuto = drivebase.getAutonomousCommand("SafetyAuto"); 
+                SafetyAuto = drivebase.getAutonomousCommand("SafetyAuto");
                 configureBindings();
 
         }
@@ -212,7 +212,7 @@ public class RobotContainer {
                 m_DrivController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
                 m_DrivController.rightBumper().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
                 m_DrivController.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-                m_DrivController.povLeft().whileTrue(FirstAuto);
+                m_DrivController.povLeft().whileTrue(getAutonomousCommand());
 
                 m_DrivController.back().whileTrue(drivebase.centerModulesCommand());
                 m_CodrivController
@@ -247,7 +247,8 @@ public class RobotContainer {
 
                 m_CodrivController
                                 .povUp()
-                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem.setArmJointPosition(78)))
+                                .onTrue(Commands.runOnce(() -> m_ArmJointsSubsystem
+                                                .setArmJointPosition(ArmJointsConstants.l4ArmAngleTeleop)))
                                 .onFalse(Commands.none());
 
                 m_CodrivController
@@ -277,12 +278,12 @@ public class RobotContainer {
 
                 m_CodrivController
                                 .rightTrigger()
-                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(500)))
+                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(100)))
                                 .onFalse(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpVelocity(0)));
 
                 m_CodrivController
                                 .leftTrigger()
-                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(-500)))
+                                .onTrue(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpPosition(-100)))
                                 .onFalse(Commands.runOnce(() -> m_PullUpSubsystem.setPullUpVelocity(0)));
 
         }
@@ -294,10 +295,9 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
                 // An example command will be run in autonomous
-                return m_chooser.getSelected();
-                //return StraightAuto;
-                //return FirstAuto;
-                
+                // return m_chooser.getSelected();
+                return Middle;
+                // return FirstAuto;
 
                 // Autos.exampleAuto(m_elevatorSubsystem);
                 // return drivebase.getAutonomousCommand("New Auto");

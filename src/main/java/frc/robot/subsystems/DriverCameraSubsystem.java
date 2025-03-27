@@ -16,12 +16,12 @@ public class DriverCameraSubsystem extends SubsystemBase {
     UsbCamera[] allCameras;
 
     public DriverCameraSubsystem() {
-        armCamera = CameraServer.startAutomaticCapture(0); // 0 is placeholder
+        // armCamera = CameraServer.startAutomaticCapture(0); // 0 is placeholder
         // backCamera = CameraServer.startAutomaticCapture(1); // 0 is placeholder
-        cameraServer = CameraServer.getServer();
-        allCameras = new UsbCamera[] { armCamera };
-        armCamera.setResolution(160, 120);
-        armCamera.setFPS(30);
+        // cameraServer = CameraServer.getServer();
+        // allCameras = new UsbCamera[] { armCamera };
+        // armCamera.setResolution(160, 120);
+        // armCamera.setFPS(30);
         // backCamera.setResolution(424, 240);
         // backCamera.setFPS(30);
 
