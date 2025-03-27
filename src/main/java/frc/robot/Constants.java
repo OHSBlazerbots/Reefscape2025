@@ -59,7 +59,8 @@ public final class Constants {
     public static final int kArmMotorPort = 11;
     public static final int kArmForwardSoftLimitRotations = 100;//75
     public static final int kArmReverseSoftLimitRotations = 0;
-    public static final int l4ArmAngle = 78;
+    public static final int l4ArmAngleTeleop = 78;
+    public static final int l4ArmAngleAuto = 80;
   
   }
 
