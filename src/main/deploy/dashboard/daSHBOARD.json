@@ -1,0 +1,85 @@
+{
+    "flexLayout": {
+        "global": {
+            "splitterSize": 3,
+            "splitterExtra": 6,
+            "borderSize": 350
+        },
+        "borders": [],
+        "layout": {
+            "type": "row",
+            "id": "layout",
+            "children": [
+                {
+                    "type": "tabset",
+                    "id": "17acd08e-7dcc-4680-ac2f-ca8bbbb60274",
+                    "weight": 50,
+                    "children": [
+                        {
+                            "type": "tab",
+                            "id": "ac84a24d-8762-47d4-b21c-e62bf82debec",
+                            "name": "TeleOperated",
+                            "component": "components"
+                        },
+                        {
+                            "type": "tab",
+                            "id": "9e57fa2f-9afd-4065-af20-01493ddbcf0c",
+                            "name": "Autonomous",
+                            "component": "components"
+                        }
+                    ],
+                    "active": true
+                }
+            ]
+        }
+    },
+    "components": {
+        "23492e9b-1459-4c44-8424-896e0e6241e5": {
+            "id": "23492e9b-1459-4c44-8424-896e0e6241e5",
+            "children": [],
+            "minSize": {
+                "width": 1,
+                "height": 1
+            },
+            "size": {
+                "width": 7,
+                "height": 6
+            },
+            "position": {
+                "x": 1,
+                "y": 1
+            },
+            "properties": {
+                "streams": {
+                    "value": ["http://172.22.11.2:1181/stream.mjpg"]
+                    
+                    
+                },
+                "backgroundColor": {
+                    "value": "#000000"
+                },
+                "waitImage": {
+                    "value": "./no-camera-stream.jpg"
+                },
+                "hideCrosshair": {
+                    "value": false
+                },
+                "crosshairColor": {
+                    "value": "#ffffff"
+                }
+            },
+            "type": "camera",
+            "name": "Camera"
+        }
+    },
+    "tabs": {
+        "ac84a24d-8762-47d4-b21c-e62bf82debec": {
+            "componentIds": [
+                "23492e9b-1459-4c44-8424-896e0e6241e5"
+            ]
+        }
+    },
+    "gridSize": 50,
+    "gridGap": 5,
+    "gridPadding": 5
+}
